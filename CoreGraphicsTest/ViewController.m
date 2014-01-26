@@ -8,12 +8,14 @@
 
 #import "ViewController.h"
 
+#define TRANSPARENCY 1.0
+
 @interface ViewController ()
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-@property (nonatomic, strong) UIView *firstView;
-@property (nonatomic, strong) UIView *secondView;
-@property (nonatomic, strong) UIView *thirdView;
+
+@property (nonatomic, assign) CGFloat delta;
+@property (nonatomic, assign) CGFloat offset;
 
 @end
 
@@ -24,84 +26,103 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:self.panGestureRecognizer];
-    [self.view addSubview:self.firstView];
-    [self.view addSubview:self.secondView];
     
-    [self panGestureRecognizerDidPan:self.panGestureRecognizer];
+    [self createViewWithColor:[UIColor redColor]];
+    [self createViewWithColor:[UIColor greenColor]];
+    [self createViewWithColor:[UIColor blueColor]];
+    [self createViewWithColor:[UIColor whiteColor]];
+    
+    [self.view addGestureRecognizer:self.panGestureRecognizer];
 }
 
-#pragma mark - Gesture recognizer
+#pragma mark - Utility methods
+
+- (void)createViewWithColor:(UIColor *)color
+{
+    UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
+    [view setBackgroundColor:color];
+    [view setAlpha:TRANSPARENCY];
+    [self.view addSubview:view];
+}
+
+#pragma mark - Gesture recognizers
 
 - (void)panGestureRecognizerDidPan:(UIPanGestureRecognizer *)sender
 {
-    NSLog(@"%f", [sender locationInView:self.view].x);
-
-    CGFloat percentage = [sender locationInView:self.view].x / 320;
+    CGFloat percentage = [sender locationInView:self.view].x / self.view.bounds.size.width * 4;
     
-    [self animateFirstViewWithPercentage:percentage];
-    [self animateSecondViewWithPercentage:percentage];
+    if (sender.state == UIGestureRecognizerStateBegan)
+    {
+        // Reset the delta so it doesn't jump
+        self.delta = percentage;
+    }
+    else if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        // See if the views should rotate right or left (only matters at start)
+        NSInteger sign = self.offset > 0 ? 1 : -1;
+        
+        // Determine where the views should snap to
+        self.offset = (int)(self.offset + 0.5 * sign);
+        
+        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            [self animateViews];
+        } completion:nil];
+    }
+    else if (sender.state == UIGestureRecognizerStateChanged ||
+               sender.state == UIGestureRecognizerStatePossible)
+    {
+        self.offset += percentage - self.delta;
+        self.delta = percentage;
+        
+        [self animateViews];
+    }
 }
 
 #pragma mark - Animations
 
-- (void)animateFirstViewWithPercentage:(CGFloat)percentage
+- (void)animateViews
 {
-    CATransform3D transform = CATransform3DIdentity;
-    transform.m34 = 1.0 / -500;
-    
-    transform = CATransform3DRotate(transform, M_PI_2 * percentage, 0, 1, 0);
-    transform = CATransform3DTranslate(transform, 0 + 160 * percentage, 0, 0 + 160 * percentage);
-    
-    self.firstView.layer.transform = transform;
+    // The four possible orientations (while not rotating) are 1, 2, 3, 4
+    // 1 -> right, 2 -> back, 3-> left, 4 -> front
+    [self animateView:self.view.subviews[0] withPercentage:self.offset + 1];
+    [self animateView:self.view.subviews[1] withPercentage:self.offset + 2];
+    [self animateView:self.view.subviews[2] withPercentage:self.offset + 3];
+    [self animateView:self.view.subviews[3] withPercentage:self.offset + 4];
 }
 
-- (void)animateSecondViewWithPercentage:(CGFloat)percentage
+- (void)animateView:(UIView *)view withPercentage:(CGFloat)percentage
 {
+    CGFloat width = view.bounds.size.width / 2;
+    
+    // Sine function that modifies the x offset (x1: 0, x2: 160, x3: 0, x4: -160)
+    CGFloat modX = sin(percentage / 2 * M_PI) * width;
+    
+    // Cosine function that modifies the z offset (z1: 0, z2: 160, z3: 320, z4: 160)
+    CGFloat modZ = -cos(percentage / 2 * M_PI) * width + width;
+    
+    // Create a 3D transform and give it some perspective
     CATransform3D transform = CATransform3DIdentity;
-    transform.m34 = 1.0 / -500;
+    transform.m34 = 1.0 / -(width * 3);
     
-    transform = CATransform3DRotate(transform, M_PI_2 * percentage - M_PI_2, 0, 1, 0);
-    transform = CATransform3DTranslate(transform, -160 + 160 * percentage, 0, 160 - 160 * percentage);
+    // Rotate the view and translate it around its center
+    transform = CATransform3DRotate(transform, M_PI_2 * percentage, 0, 1, 0);
+    transform = CATransform3DTranslate(transform, modX, 0, modZ);
     
-    self.secondView.layer.transform = transform;
+    view.layer.transform = transform;
 }
 
 #pragma mark - Overridden properties
 
 - (UIPanGestureRecognizer *)panGestureRecognizer
 {
-    if (_panGestureRecognizer == nil) {
+    if (_panGestureRecognizer == nil)
+    {
         _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerDidPan:)];
+        
+        // Set the first state of the views
+        [self panGestureRecognizerDidPan:_panGestureRecognizer];
     }
     return _panGestureRecognizer;
-}
-
-- (UIView *)firstView
-{
-    if (_firstView == nil) {
-        _firstView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-        [_firstView setBackgroundColor:[UIColor redColor]];
-    }
-    return _firstView;
-}
-
-- (UIView *)secondView
-{
-    if (_secondView == nil) {
-        _secondView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-        [_secondView setBackgroundColor:[UIColor greenColor]];
-    }
-    return _secondView;
-}
-
-- (UIView *)thirdView
-{
-    if (_thirdView == nil) {
-        _thirdView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-        [_thirdView setBackgroundColor:[UIColor blueColor]];
-    }
-    return _thirdView;
 }
 
 @end

@@ -13,7 +13,6 @@
 		49A152361894423200ECDE70 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49A152341894423200ECDE70 /* InfoPlist.strings */; };
 		49A152381894423200ECDE70 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A152371894423200ECDE70 /* main.m */; };
 		49A1523C1894423200ECDE70 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A1523B1894423200ECDE70 /* AppDelegate.m */; };
-		49A1523F1894423200ECDE70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49A1523D1894423200ECDE70 /* Main.storyboard */; };
 		49A152421894423200ECDE70 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A152411894423200ECDE70 /* ViewController.m */; };
 		49A152441894423200ECDE70 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49A152431894423200ECDE70 /* Images.xcassets */; };
 		49A1524B1894423200ECDE70 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A1524A1894423200ECDE70 /* XCTest.framework */; };
@@ -44,7 +43,6 @@
 		49A152391894423200ECDE70 /* CoreGraphicsTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreGraphicsTest-Prefix.pch"; sourceTree = "<group>"; };
 		49A1523A1894423200ECDE70 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		49A1523B1894423200ECDE70 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		49A1523E1894423200ECDE70 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		49A152401894423200ECDE70 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		49A152411894423200ECDE70 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		49A152431894423200ECDE70 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -114,7 +112,6 @@
 			children = (
 				49A1523A1894423200ECDE70 /* AppDelegate.h */,
 				49A1523B1894423200ECDE70 /* AppDelegate.m */,
-				49A1523D1894423200ECDE70 /* Main.storyboard */,
 				49A152401894423200ECDE70 /* ViewController.h */,
 				49A152411894423200ECDE70 /* ViewController.m */,
 				49A152431894423200ECDE70 /* Images.xcassets */,
@@ -230,7 +227,6 @@
 			files = (
 				49A152441894423200ECDE70 /* Images.xcassets in Resources */,
 				49A152361894423200ECDE70 /* InfoPlist.strings in Resources */,
-				49A1523F1894423200ECDE70 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,14 +276,6 @@
 				49A152351894423200ECDE70 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		49A1523D1894423200ECDE70 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				49A1523E1894423200ECDE70 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		49A152531894423200ECDE70 /* InfoPlist.strings */ = {
@@ -381,7 +369,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CoreGraphicsTest/CoreGraphicsTest-Prefix.pch";
 				INFOPLIST_FILE = "CoreGraphicsTest/CoreGraphicsTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -394,7 +384,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CoreGraphicsTest/CoreGraphicsTest-Prefix.pch";
 				INFOPLIST_FILE = "CoreGraphicsTest/CoreGraphicsTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -460,6 +452,7 @@
 				49A1525C1894423200ECDE70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		49A1525D1894423200ECDE70 /* Build configuration list for PBXNativeTarget "CoreGraphicsTestTests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +461,7 @@
 				49A1525F1894423200ECDE70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
