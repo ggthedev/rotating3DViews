@@ -111,6 +111,17 @@
     view.layer.transform = transform;
 }
 
+#pragma mark - Interface orientation
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    for (UIView *view in self.view.subviews)
+    {
+        [view setFrame:self.view.bounds];
+    }
+    [self panGestureRecognizerDidPan:self.panGestureRecognizer];
+}
+
 #pragma mark - Overridden properties
 
 - (UIPanGestureRecognizer *)panGestureRecognizer
